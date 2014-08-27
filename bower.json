@@ -1,0 +1,40 @@
+{
+  "name": "sense-ebola-contact-sync",
+  "version": "0.1.0",
+  "description": "Admin dashboard for Ebola sensed contact data.",
+  "homepage": "https://github.com/eHealthAfrica/sense-ebola-contact-sync.git",
+  "authors": [
+    "eHealth Africa <http://ehealthafrica.org>"
+  ],
+  "license": "ISC",
+  "private": true,
+  "dependencies": {
+    "angular": "~1.2.22",
+    "ng-csv": "~0.2.3",
+    "bootstrap-sass-official": "~3.1.1",
+    "angular-sanitize": "~1.2.22",
+    "angular-route": "~1.2.22",
+    "angular-resource": "~1.2.22",
+    "angular-ui-bootstrap-bower": "~0.11.0",
+    "moment": "~2.7.0",
+    "pouchdb": "~2.2.3",
+    "lodash": "~2.4.1",
+    "ng-table": "~0.3.3",
+    "ngstorage": "~0.3.0",
+    "font-awesome": "~4.1.0"
+  },
+  "devDependencies": {
+    "angular-mocks": "~1.2.22",
+    "es5-shim": "~2.3.0"
+  },
+  "keywords": [
+    "ebola",
+    "dashboard",
+    "ehealth"
+  ],
+  "overrides": {
+    "lodash": {
+      "main": "dist/lodash.js"
+    }
+  }
+}

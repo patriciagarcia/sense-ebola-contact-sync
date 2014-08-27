@@ -1,0 +1,220 @@
+// Imports =====================
+@import url("http://fonts.googleapis.com/css?family=Cabin:400,700,400italic");
+@import "bootstrap";
+@import "compass/css3/columns";
+
+// Bootstrap overrides =====================
+.bg-success, .alert-success {
+  background-color: darken($brand-success, 20%);
+  color: $white;
+}
+.bg-info, .alert-info {
+  background-color: darken($brand-info, 20%);
+  color: $white;
+}
+.bg-warning, .alert-warning {
+  background-color: darken($brand-warning, 20%);
+  color: $white;
+}
+.bg-danger, .alert-danger {
+  background-color: darken($brand-danger, 20%);
+  color: $white;
+}
+
+// Helpers =====================
+.pointer{cursor: pointer;}
+.panel-compressed {
+  padding-left: 5px;
+  padding-right: 0px;
+}
+.panel-compressed {
+  &.last {padding-right: 5px;}
+}
+
+// Base =====================
+body {
+  font-family: "Cabin", Helvetica, sans-serif;
+  color: $black;
+  font-size: 11px;
+}
+a, button {cursor: pointer;}
+
+// Navbar =====================
+.navbar-default {
+  border-color: $brown-lighter;
+}
+
+.navbar-text {
+  padding: 4px 15px;
+  margin: 0;
+  background-color: $brown-light;
+  min-width: 145px;
+  .navbar-hour {
+    font-size: $font-size-h3;
+    line-height: normal;
+  }
+  .navbar-last-update {
+    line-height: normal;
+  }
+}
+
+.preloader-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0; right: 0; left: 0; bottom: 0;
+  background-color: rgba($brown, 0.7);
+  z-index: 9998;
+  .preloader {
+    position: absolute;
+    margin: auto;
+    z-index: 9999;
+    top: 0; right: 0; left: 0; bottom: 0;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+  }
+}
+
+.preloader-height{
+  height: 40px;
+}
+// Map =======================
+
+.map-legend {
+  z-index: 1500;
+  position: absolute;
+  background-color: white;
+  top: 10px;
+  right: 10px;
+  width: 130px;
+  box-shadow: 0 1px 2px $brown;
+  border-radius: 4px;
+  padding: 7px 10px;
+}
+
+.map-legend-header {
+  padding-left: 17px;
+}
+
+.map-legend p {
+  margin: 0;
+}
+
+// Panels =====================
+.page-header {
+  margin: 10px 0px 0px 0px;
+  text-transform: uppercase;
+  padding: 10px;
+  display: inline-block;
+  background-color: #fff;
+}
+
+.panel {
+  border: 1px solid $brown-light;
+  margin-bottom: 5px;
+  min-height: 299px;
+  .ng-table-pager {display: none;}
+}
+
+.panel-heading, .panel-footer {
+  background-color: $brown-light !important;
+  border-bottom: none;
+  border-radius: 0;
+  color: $white !important;
+  padding: 3px 6px;
+  text-transform: uppercase;
+}
+
+.panel-footer {
+  text-transform: none;
+  font-weight: normal;
+  font-style: italic;
+  &.compact {
+    line-height: 0;
+    padding: 3px;
+  }
+
+  .pagination {
+    margin: 0;
+  }
+}
+
+.btn-export {
+  margin-top: 3px;
+}
+
+// Tables =====================
+.table {
+  border: none!important;
+  .header {border-bottom: 1px solid $brown-light;}
+  .sort-desc, .sort-asc {
+    background-color: rgba($brown-lighter, 0.4)!important;
+  }
+}
+
+
+// Footer =====================
+footer {
+  background: #fff;
+  margin-top: 40px;
+  padding: 20px;
+  .footnote {margin: 0;}
+}
+
+// Login =====================
+td .form-group {
+  margin: 0;
+}
+
+td .form-group .form-control-feedback {
+  top: 0;
+}
+
+.has-feedback .form-control.filter {
+  padding-right: 12px;
+}
+
+.table-scroller {
+  display: block;
+  overflow-x: auto;
+}
+
+.table-scroller table {
+  margin-bottom: 0;
+  border: none;
+}
+
+.table-scroller table.table-bordered > thead > tr > th:first-child,
+.table-scroller table.table-bordered > thead > tr > td:first-child,
+.table-scroller table.table-bordered > tbody > tr > th:first-child,
+.table-scroller table.table-bordered > tbody > tr > td:first-child,
+.table-scroller table.table-bordered > tfoot > tr > th:first-child,
+.table-scroller table.table-bordered > tfoot > tr > td:first-child {
+  border-left: none;
+}
+
+.table-scroller table.table-bordered > thead > tr > th:last-child,
+.table-scroller table.table-bordered > thead > tr > td:last-child,
+.table-scroller table.table-bordered > tbody > tr > th:last-child,
+.table-scroller table.table-bordered > tbody > tr > td:last-child,
+.table-scroller table.table-bordered > tfoot > tr > th:last-child,
+.table-scroller table.table-bordered > tfoot > tr > td:last-child {
+  border-right: none;
+}
+
+#stock-count-summary > tbody + tbody {
+  border-top: none;
+}
+
+#missing-contacts {
+  padding: 5px;
+}
+
+#missing-contacts {
+  @include column-count(2);
+}
+
+tr.bg-danger .text-danger{
+  color: #ffffff;
+}

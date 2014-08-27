@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>EOC Lagos | Ebola Contact Synchronization</title>
+  <meta name="description" content="Admin dashboard for Ebola sensed contact data">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <!-- build:css styles/vendor.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="bower_components/ng-table/ng-table.css" />
+  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
+  <!-- endbower -->
+  <!-- endbuild -->
+  <!-- build:css({.tmp,app}) styles/main.css -->
+  <link rel="stylesheet" href="styles/main.css">
+  <!-- endbuild -->
+</head>
+<body ng-app="secsApp">
+  <nav ng-show="app.init" class="navbar navbar-default navbar-static-top" ng-controller="NavBar">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">EOC Lagos | Ebola Conctact Synchronization</a>
+      </div>
+
+      <ul class="nav navbar-nav navbar-right" ng-if="currentUser">
+        <li class="dropdown">
+          <a class="dropdown-toggle" href="#" data-toggle="dropdown">
+            <i class="fa fa-user fa-lg">&nbsp;</i>
+            <span ng-bind="currentUser.username"></span>
+            <span ng-cloak class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a ng-click="logout()">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <p ng-if="currentUser" class="navbar-preloader navbar-right">
+        <img class="preloader preloader-height" src="../images/preloader.gif" alt="preloader">
+      </p>
+
+      <ul class="nav navbar-nav navbar-right" ng-if="!currentUser">
+        <li class="dropdown">
+          <a href="/#/login">
+            <span>Login</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div ng-show="app.init" class="container-fluid" ng-view></div>
+  <footer class="footer">
+    <div class="container">
+      <p class="footnote text-muted text-center">
+        <span>Powered by eHealth Sense</span>
+        <img src="images/ehealth_logo_on_white.png" width="100" alt="eHealthAfrica logo" />
+      </p>
+    </div>
+  </footer>
+  <!-- build:js scripts/vendor.js -->
+  <!-- bower:js -->
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+  <script src="bower_components/ng-csv/build/ng-csv.min.js"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="bower_components/angular-resource/angular-resource.js"></script>
+  <script src="bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js"></script>
+  <script src="bower_components/moment/moment.js"></script>
+  <script src="bower_components/pouchdb/dist/pouchdb-nightly.js"></script>
+  <script src="bower_components/lodash/dist/lodash.js"></script>
+  <script src="bower_components/ng-table/ng-table.js"></script>
+  <script src="bower_components/ngstorage/ngStorage.js"></script>
+  <!-- endbower -->
+  <!-- endbuild -->
+  <!-- build:js({.tmp,app}) scripts/scripts.js -->
+  <script src="scripts/config.js"></script>
+  <script src="scripts/app.js"></script>
+  <script src="scripts/services/auth.js"></script>
+  <script src="scripts/services/couchdb.js"></script>
+  <script src="scripts/controllers/login.js"></script>
+  <script src="scripts/controllers/contacts.js"></script>
+  <!-- endbuild -->
+</body>
+</html>

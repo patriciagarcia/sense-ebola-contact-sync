@@ -8,10 +8,8 @@
  * Controller of secsApp
  */
 angular.module('secsApp')
-  .controller('ContactsCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('ContactsCtrl', function ($scope, contactFactory) {
+    contactFactory.orderedByName().then(function(contacts) {
+      $scope.contacts = contacts
+    });
   });

@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('secsApp')
-  .factory('contactFactory', function contactFactory($q, $window, $sessionStorage, couchdb) {
+  .factory('contactFactory', function (
+    $q, $window, $sessionStorage, dateParser, couchdb) {
 
     var DB_NAME = 'sense_contacts';
 
@@ -11,14 +12,17 @@ angular.module('secsApp')
       couchdb.view({_db: DB_NAME, _param:'contacts', _sub_param: 'withStatusByName'}).$promise
         .then(function(response) {
           var data = $window._.map(response.rows,
-                                    function(row) {
-                                      return {
-                                        lastName: row.key[0],
-                                        otherNames: row.key[1],
-                                        status: row.key[2],
-                                        _id: row.value._id,
-                                        lastVisit: row.value.lastVisit,
-                                        age: row.value.age}});
+                        function(row) {
+                          return {
+                            lastName: row.key[0],
+                            otherNames: row.key[1],
+                            status: row.key[2],
+                            _id: row.value._id,
+                            daysSinceLastContact: dateParser.daysFromToday(
+                              row.value.dateLastContact, row.value.dateFirstVisit)
+                            }}
+                      );
+
           d.resolve(data);
         })
         .catch(function(error) {

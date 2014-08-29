@@ -2,29 +2,23 @@
   <div class="panel-heading">
     Contacts
   </div>
-  <table class="table table-condensed">
-     <thead>
-       <tr>
-         <th title="Name">Name</th>
-         <!--<th title="Age">Age</th>-->
-         <!--<th title="Date of Last Visit">Last visit</th>-->
-         <th title="Status">Status</th>
-         <th title="Change status">Change status</th>
-       </tr>
-     </thead>
-     <tbody>
-        <tr ng-repeat="contact in contacts">
-          <td data-title="'Name'">{{contact.lastName | name}}, {{contact.otherNames|name}}</td>
-          <!--<td data-title="'Age'">{{contact.age | orEmpty}}</td>-->
-          <!--<td data-title="'Date of Last Visit'">{{contact.lastVisit | date:SETTINGS.dateTimeFormat}}</td>-->
-          <td data-title="'Status'" ng-bind="contact.status">{{contact.status}}</td>
-          <td data-title="'Change status'">
-            <button ng-click="toggleStatus(contact)">
-              Set {{contact.status === 'active' ? 'inactive':'active'}}
-            </button>
-          </td>
-        </tr>
-     </tbody>
+  <table class="table table-condensed" ng-table="locals.tableParams">
+      <tr ng-repeat="contact in $data">
+        <td data-title="'Name'" sortable="'lastName'">
+          {{contact.lastName | name}}, {{contact.otherNames|name}}
+        </td>
+        <td data-title="'Days since last contact'" sortable="'daysSinceLastContact'">
+          {{contact.daysSinceLastContact}}
+        </td>
+        <td data-title="'Status'" ng-bind="contact.status" sortable="'status'">
+          {{contact.status}}
+        </td>
+        <td data-title="'Change status'">
+          <button ng-click="toggleStatus(contact)">
+            Set {{contact.status === 'active' ? 'inactive':'active'}}
+          </button>
+        </td>
+      </tr>
   </table>
   <div class="panel-footer compact">
   </div>

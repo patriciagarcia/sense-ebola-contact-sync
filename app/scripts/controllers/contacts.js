@@ -8,9 +8,27 @@
  * Controller of secsApp
  */
 angular.module('secsApp')
-  .controller('ContactsCtrl', function ($scope, contactFactory) {
+  .controller('ContactsCtrl', function ($scope, $filter, ngTableParams, contactFactory) {
+    $scope.contacts = [];
+
+    var locals = $scope.locals = {
+      tableParams: new ngTableParams({
+        sorting: {
+          lastName: 'asc'
+        }
+      }, {
+        total: 0,
+        getData: function($defer, params) {
+          var orderedData = params.sorting() ?
+                    $filter('orderBy')($scope.contacts, params.orderBy()) : $scope.contacts;
+          $defer.resolve(orderedData);
+        }
+      })
+    };
+
     contactFactory.orderedByName().then(function(contacts) {
-      $scope.contacts = contacts
+      $scope.contacts = contacts;
+      locals.tableParams.reload();
     });
 
     function toggleStatus(contact) {

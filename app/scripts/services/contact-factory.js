@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('secsApp')
-  .factory('contactFactory', function contactFactory($q, $window, couchdb) {
+  .factory('contactFactory', function contactFactory($q, $window, $sessionStorage, couchdb) {
 
     var DB_NAME = 'sense_contacts';
 
@@ -33,9 +33,23 @@ angular.module('secsApp')
 
       get(id)
         .then(function(contact) {
+          var change = {
+            timestamp: Date.now(),
+            author: $sessionStorage.user.username,
+            lastRev: contact._rev,
+            changes: []
+          };
           angular.forEach(data, function(value, key) {
+            change.changes.push({
+              key: key,
+              previousValue: contact[key],
+              newValue: value
+            });
             contact[key] = value;
           });
+          contact.changeHistory = contact.changeHistory || [];
+          contact.changeHistory.push(change);
+
           couchdb.update({_db: DB_NAME, _param: contact._id}, contact).$promise
             .then(function(response) {
               contact._rev = response.rev

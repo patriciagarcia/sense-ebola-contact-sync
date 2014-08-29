@@ -8,8 +8,7 @@ angular
     'ngResource',
     'ngStorage',
     'ngTable',
-    'ui.bootstrap',
-    'ngCsv'
+    'ui.bootstrap'
   ])
   .config(function($httpProvider, $routeProvider) {
 

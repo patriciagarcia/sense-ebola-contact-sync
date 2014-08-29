@@ -442,7 +442,7 @@ module.exports = function(grunt) {
     },
 
     ngtemplates: {
-      sedApp: {
+      secsApp: {
         options: {
           htmlmin: '<%= htmlmin.dist.options %>',
           usemin: 'scripts/scripts.js'

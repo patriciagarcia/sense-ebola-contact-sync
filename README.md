@@ -17,7 +17,7 @@
 [saucelabs-url]: https://saucelabs.com/u/sense-ebola-dash
 [saucelabs-image]: https://saucelabs.com/buildstatus/sense-ebola-dash
 
-> Admin dashboard for Ebola sensed contact data.
+> Data management console for sensed Ebola data.
 
 ## Usage
 

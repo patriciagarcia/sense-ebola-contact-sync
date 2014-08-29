@@ -4,13 +4,13 @@
   </div>
   <table class="table table-condensed" ng-table="locals.tableParams">
       <tr ng-repeat="contact in $data">
-        <td data-title="'Name'" sortable="'lastName'">
+        <td data-title="'Name'" data-sortable="'lastName'">
           {{contact.lastName | name}}, {{contact.otherNames|name}}
         </td>
-        <td data-title="'Days since last contact'" sortable="'daysSinceLastContact'">
+        <td data-title="'Days since last contact'" data-sortable="'daysSinceLastContact'">
           {{contact.daysSinceLastContact}}
         </td>
-        <td data-title="'Status'" ng-bind="contact.status" sortable="'status'">
+        <td data-title="'Status'" ng-bind="contact.status" data-sortable="'status'">
           {{contact.status}}
         </td>
         <td data-title="'Change status'">

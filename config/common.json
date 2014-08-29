@@ -1,5 +1,10 @@
 {
   "timeFormat": "HH:mm:ss",
   "dateFormat": "yyyy-MM-dd",
-  "dateTimeFormat": "yyyy-MM-dd HH:mm"
+  "dateTimeFormat": "yyyy-MM-dd HH:mm",
+  "dbDataDateFormats": [
+    "DD/MM/YYYY",
+    "MM/DD/YYYY"
+  ],
+  "incubationPeriod": 21
 }

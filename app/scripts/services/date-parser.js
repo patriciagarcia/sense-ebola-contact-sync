@@ -29,10 +29,12 @@ angular.module('secsApp')
     function toMomentObjectGuessingFormat(date, alternativeDate) {
       var parsedAlternativeDate = moment(alternativeDate);
       if (date) {
+        // Add default ISO parsing to the array of data formats
+        var formats = [moment.ISO_8601].concat(SETTINGS.dbDataDateFormats);
         // Try every format until one of them produces a date which is less than
         // SETTINGS.incubationPeriod days appart from the alternativeDate
-        for (var i = 0; i < SETTINGS.dbDataDateFormats.length; i++) {
-          var parsedDate = moment(date, SETTINGS.dbDataDateFormats[i]);
+        for (var i = 0; i < formats.length; i++) {
+          var parsedDate = moment(date, formats[i]);
           if (parsedDate.isValid()) {
             var daysDiffToAlternativeDate = parsedAlternativeDate.diff(parsedDate, 'days');
             if (daysDiffToAlternativeDate < SETTINGS.incubationPeriod) {

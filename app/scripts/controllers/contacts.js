@@ -12,4 +12,14 @@ angular.module('secsApp')
     contactFactory.orderedByName().then(function(contacts) {
       $scope.contacts = contacts
     });
+
+    function toggleStatus(contact) {
+      var newStatus = (contact.status === 'active' ? 'inactive' : 'active');
+      contactFactory.update(contact._id, { 'status': newStatus})
+        .then(function(updatedContact) {
+            contact.status = updatedContact.status;
+        });
+    };
+
+    $scope.toggleStatus = toggleStatus;
   });

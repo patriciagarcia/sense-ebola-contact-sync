@@ -22,6 +22,14 @@ angular.module('secsApp')
             _action: '_bulk_docs'
           }
         },
+        update: {
+          method: 'PUT',
+          withCredentials: true,
+        },
+        get: {
+          method: 'GET',
+          withCredentials: true,
+        },
         view: {
           method: 'GET',
           withCredentials: true,

@@ -485,7 +485,8 @@ module.exports = function(grunt) {
           'bower.json'
         ],
         commitFiles: '<%= bump.options.files %>',
-        pushTo: 'origin'
+        pushTo: 'origin',
+        createTag: false
       }
     }
   });

@@ -18,7 +18,8 @@ skip() { error "${1}. Skipping build."; }
 
 if [[ "$TRAVIS_BRANCH" == "master" ]]; then
   build "prod"
-  grunt build:prod
+  # FIXME: restore `grunt build:prod`, see item:124
+  grunt build
 elif [[ "$TRAVIS_BRANCH" == "develop" ]]; then
   build "dev"
   grunt build

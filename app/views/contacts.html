@@ -3,7 +3,9 @@
     Contacts
   </div>
   <table class="table table-condensed" ng-table="tableParams">
-      <tr ng-repeat="contact in $data">
+    <tr ng-repeat="contact in $data"
+      ng-class="{deactivate: contact.status === 'active' &&
+          contact.daysSinceLastContact > SETTINGS.incubationPeriod}">
         <td data-title="'Name'" data-sortable="'lastName'">
           {{contact.lastName | name}}, {{contact.otherNames|name}}
         </td>

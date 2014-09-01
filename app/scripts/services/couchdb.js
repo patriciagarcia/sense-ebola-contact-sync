@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('secsApp')
-  .factory('couchdb', function ($resource, SETTINGS) {
+  .factory('couchdb', ['$resource', 'SETTINGS', function ($resource, SETTINGS) {
     return $resource(SETTINGS.dbUrl + ':_db/:_action/:_param/:_sub/:_sub_param',
       {
         _db: '@_db'
@@ -75,4 +75,4 @@ angular.module('secsApp')
           }
         }
       })
-  });
+  }]);

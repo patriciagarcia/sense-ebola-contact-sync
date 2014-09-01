@@ -8,11 +8,11 @@
  * Factory in the secsApp.
  */
 angular.module('secsApp')
-  .factory('dateParser', function (SETTINGS) {
+  .factory('dateParser', ['$window', 'SETTINGS', function ($window, SETTINGS) {
     function daysFromToday(date, alternativeDate) {
       var parsedDate = toMomentObjectGuessingFormat(date, alternativeDate);
       if (parsedDate) {
-        return moment().diff(parsedDate, 'days');
+        return $window.moment().diff(parsedDate, 'days');
       }
       return '';
     }
@@ -27,14 +27,14 @@ angular.module('secsApp')
      * as an @alternativeDate.
      * */
     function toMomentObjectGuessingFormat(date, alternativeDate) {
-      var parsedAlternativeDate = moment(alternativeDate);
+      var parsedAlternativeDate = $window.moment(alternativeDate);
       if (date) {
         // Add default ISO parsing to the array of data formats
-        var formats = [moment.ISO_8601].concat(SETTINGS.dbDataDateFormats);
+        var formats = [$window.moment.ISO_8601].concat(SETTINGS.dbDataDateFormats);
         // Try every format until one of them produces a date which is less than
         // SETTINGS.incubationPeriod days appart from the alternativeDate
         for (var i = 0; i < formats.length; i++) {
-          var parsedDate = moment(date, formats[i]);
+          var parsedDate = $window.moment(date, formats[i]);
           if (parsedDate.isValid()) {
             var daysDiffToAlternativeDate = parsedAlternativeDate.diff(parsedDate, 'days');
             if (daysDiffToAlternativeDate < SETTINGS.incubationPeriod) {
@@ -54,4 +54,4 @@ angular.module('secsApp')
       daysFromToday: daysFromToday,
       toISOStringGuessingFormat: toISOStringGuessingFormat
     };
-  });
+  }]);

@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('secsApp')
-  .factory('contactFactory', function (
-    $q, $window, $sessionStorage, dateParser, couchdb) {
+  .factory('contactFactory',
+      ['$q', '$window', '$sessionStorage', 'dateParser', 'couchdb',
+      function ($q, $window, $sessionStorage, dateParser, couchdb) {
 
     var DB_NAME = 'sense_contacts';
 
@@ -79,4 +80,4 @@ angular.module('secsApp')
       update: update,
       get: get
     };
-  });
+  }]);

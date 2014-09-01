@@ -218,3 +218,7 @@ td .form-group .form-control-feedback {
 tr.bg-danger .text-danger{
   color: #ffffff;
 }
+
+tr.deactivate {
+  background-color: $green-light;
+}

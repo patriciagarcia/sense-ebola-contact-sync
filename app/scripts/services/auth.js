@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('secsApp')
-  .factory('Auth', function Auth($rootScope, $sessionStorage, couchdb) {
+  .factory('Auth', ['$rootScope', '$sessionStorage', 'couchdb',
+      function ($rootScope, $sessionStorage, couchdb) {
     $rootScope.currentUser = null;
     $rootScope.app = $rootScope.app || {
       init: false
@@ -94,4 +95,4 @@ angular.module('secsApp')
         return !!$rootScope.currentUser;
       }
     };
-  });
+  }]);

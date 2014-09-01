@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('secsApp')
-  .controller('LoginCtrl', function($location, Auth) {
+  .controller('LoginCtrl', ['$location', 'Auth', function($location, Auth) {
     var back = ($location.search() && $location.search().back) || '/';
 
     this.user = {};
@@ -28,4 +28,4 @@ angular.module('secsApp')
           });
       }
     };
-  });
+  }]);

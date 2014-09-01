@@ -10,7 +10,8 @@ angular
     'ngTable',
     'ui.bootstrap'
   ])
-  .config(function($httpProvider, $routeProvider) {
+  .config(['$httpProvider', '$routeProvider',
+      function($httpProvider, $routeProvider) {
 
     $routeProvider
       .when('/', {
@@ -55,8 +56,9 @@ angular
         };
       }
     ]);
-  })
-  .run(function($rootScope, $route, SETTINGS, Auth, $location) {
+  }])
+  .run(['$rootScope', '$route', 'SETTINGS', 'Auth', '$location',
+      function($rootScope, $route, SETTINGS, Auth, $location) {
     $rootScope.SETTINGS = SETTINGS;
 
     $rootScope.logout = function() {
@@ -64,9 +66,9 @@ angular
       $route.reload();
       $location.path('/login');
     };
-  })
-  .controller('NavBar', function($scope, $location) {
+  }])
+  .controller('NavBar', ['$scope', '$location', function($scope, $location) {
     $scope.isActive = function(url) {
       return url == $location.path();
     };
-  });
+  }]);

@@ -9,7 +9,7 @@
  * Filter in the secsApp.
  */
 angular.module('secsApp')
-  .filter('name', function ($window) {
+  .filter('name', ['$window', function ($window) {
     return function (input) {
       if (typeof input !== 'undefined' && input !== null) {
         var names = input.split(' ');
@@ -21,4 +21,4 @@ angular.module('secsApp')
         return '';
       }
     };
-  });
+  }]);

@@ -1,0 +1,17 @@
+Sense Ebola Contact Sync
+========================
+
+Version 0.1.3
+-------------
+Contacts can be filtered by state and LGA.
+
+Version 0.1.2
+-------------
+Contacts with status active and more than 21 days since last contact are highlighted.
+
+Version 0.1.1
+-------------
+First public release:
+
+Contacts can be ordered by name, state, LGA, days since last contact and status.
+Contact status can be updated.

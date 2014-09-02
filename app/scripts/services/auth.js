@@ -8,19 +8,20 @@ angular.module('secsApp')
       init: false
     };
 
-    if ($sessionStorage.user)
-      set($sessionStorage.user);
-
-    // no async operation, so set init to true right away
-    $rootScope.app.init = true;
-
     function set(user) {
-      if (user != $rootScope.currentUser) {
+      if (user !== $rootScope.currentUser) {
         $rootScope.currentUser = user;
         $sessionStorage.user = user;
         $rootScope.$emit('currentUserChanged', user);
       }
     }
+
+    if ($sessionStorage.user) {
+      set($sessionStorage.user);
+    }
+
+    // no async operation, so set init to true right away
+    $rootScope.app.init = true;
 
     return {
       /**

@@ -8,12 +8,14 @@
  * Controller of secsApp
  */
 angular.module('secsApp')
+  // Note: make ngTableParams -> NgTableParams, to make jshint stop complaining
   .controller('ContactsCtrl',
       ['$scope', '$filter', 'ngTableParams', 'contactFactory',
-      function ($scope, $filter, ngTableParams, contactFactory) {
+      function ($scope, $filter, NgTableParams, contactFactory) {
+
     $scope.contacts = [];
 
-    $scope.tableParams = new ngTableParams({
+    $scope.tableParams = new NgTableParams({
         sorting: {
           lastName: 'asc'
         }
@@ -21,8 +23,9 @@ angular.module('secsApp')
         total: $scope.contacts.length,
         getData: function($defer, params) {
           var data = $scope.contacts;
-          var orderedData = params.sorting() ?
+          var orderedData = params.sorting ?
                     $filter('orderBy')(data, params.orderBy()) : data;
+
           $defer.resolve(orderedData);
         }
       });
@@ -38,7 +41,7 @@ angular.module('secsApp')
         .then(function(updatedContact) {
             contact.status = updatedContact.status;
         });
-    };
+    }
 
     $scope.toggleStatus = toggleStatus;
   }]);

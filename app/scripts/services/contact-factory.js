@@ -10,6 +10,7 @@ angular.module('secsApp')
     function getContactsViewWithStatusByName() {
       var d = $q.defer();
 
+      /* jshint camelcase: false */
       couchdb.view({_db: DB_NAME, _param:'contacts', _sub_param: 'withStatusByName'}).$promise
         .then(function(response) {
           var data = $window._.map(response.rows,
@@ -21,8 +22,8 @@ angular.module('secsApp')
                             _id: row.value._id,
                             daysSinceLastContact: dateParser.daysFromToday(
                               row.value.dateLastContact, row.value.dateFirstVisit)
-                            }}
-                      );
+                          };
+                        });
 
           d.resolve(data);
         })
@@ -57,7 +58,7 @@ angular.module('secsApp')
 
           couchdb.update({_db: DB_NAME, _param: contact._id}, contact).$promise
             .then(function(response) {
-              contact._rev = response.rev
+              contact._rev = response.rev;
               d.resolve(contact);
             })
             .catch(function(error) {
@@ -72,7 +73,7 @@ angular.module('secsApp')
     }
 
     function get(id) {
-      return couchdb.get({_db: DB_NAME, _param: id}).$promise
+      return couchdb.get({_db: DB_NAME, _param: id}).$promise;
     }
 
     return {

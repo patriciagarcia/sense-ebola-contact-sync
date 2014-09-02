@@ -11,6 +11,7 @@ angular.module('secsApp')
           method: 'GET',
           withCredentials: true,
           params: {
+            /* jshint camelcase: false */
             _action: '_all_docs',
             include_docs: true
           }
@@ -74,5 +75,5 @@ angular.module('secsApp')
             _db: '_session'
           }
         }
-      })
+      });
   }]);

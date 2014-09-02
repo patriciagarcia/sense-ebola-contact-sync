@@ -15,16 +15,19 @@ angular.module('secsApp')
 
     $scope.contacts = [];
 
-    $scope.tableParams = new NgTableParams({
+    $scope.tableParams = new NgTableParams(
+      {
         sorting: {
           lastName: 'asc'
         }
       }, {
         total: $scope.contacts.length,
         getData: function($defer, params) {
-          var data = $scope.contacts;
           var orderedData = params.sorting ?
-                    $filter('orderBy')(data, params.orderBy()) : data;
+                    $filter('orderBy')($scope.contacts, params.orderBy()) : $scope.contacts;
+
+          orderedData = params.filter ?
+                    $filter('filter')(orderedData, params.filter()) : orderedData;
 
           $defer.resolve(orderedData);
         }

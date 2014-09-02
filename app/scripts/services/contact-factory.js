@@ -19,6 +19,8 @@ angular.module('secsApp')
                             lastName: row.key[0],
                             otherNames: row.key[1],
                             status: row.key[2],
+                            lga: row.value.lga,
+                            state: row.value.state,
                             _id: row.value._id,
                             daysSinceLastContact: dateParser.daysFromToday(
                               row.value.dateLastContact, row.value.dateFirstVisit)

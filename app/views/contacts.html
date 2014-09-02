@@ -2,12 +2,18 @@
   <div class="panel-heading">
     Contacts
   </div>
-  <table class="table table-condensed" ng-table="tableParams">
+  <table class="table table-condensed" ng-table="tableParams" show-filter="true">
     <tr ng-repeat="contact in $data"
       ng-class="{deactivate: contact.status === 'active' &&
           contact.daysSinceLastContact > SETTINGS.incubationPeriod}">
         <td data-title="'Name'" data-sortable="'lastName'">
           {{contact.lastName | name}}, {{contact.otherNames|name}}
+        </td>
+        <td data-title="'State'" filter="{'state': 'text'}" data-sortable="'state'">
+          {{contact.state | name}}
+        </td>
+        <td data-title="'LGA'" filter="{'lga': 'text'}" data-sortable="'lga'">
+          {{contact.lga | name}}
         </td>
         <td data-title="'Days since last contact'" data-sortable="'daysSinceLastContact'">
           {{contact.daysSinceLastContact}}

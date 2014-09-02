@@ -1,6 +1,10 @@
 Sense Ebola Contact Sync
 ========================
 
+Version 0.1.4
+-------------
+Highlight only days since last contact in contacts marked for deactivation.
+
 Version 0.1.3
 -------------
 Contacts can be filtered by state and LGA.

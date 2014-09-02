@@ -1,6 +1,6 @@
 {
   "name": "sense-ebola-contact-sync",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Data management console for sensed Ebola data.",
   "homepage": "https://github.com/eHealthAfrica/sense-ebola-contact-sync.git",
   "author": "eHealth Africa <http://ehealthafrica.org>",

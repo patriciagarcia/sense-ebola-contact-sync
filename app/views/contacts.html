@@ -3,9 +3,7 @@
     Contacts
   </div>
   <table class="table table-condensed" ng-table="tableParams" show-filter="true">
-    <tr ng-repeat="contact in $data"
-      ng-class="{deactivate: contact.status === 'active' &&
-          contact.daysSinceLastContact > SETTINGS.incubationPeriod}">
+    <tr ng-repeat="contact in $data">
         <td data-title="'Name'" data-sortable="'lastName'">
           {{contact.lastName | name}}, {{contact.otherNames|name}}
         </td>
@@ -15,8 +13,10 @@
         <td data-title="'LGA'" filter="{'lga': 'text'}" data-sortable="'lga'">
           {{contact.lga | name}}
         </td>
-        <td data-title="'Days since last contact'" data-sortable="'daysSinceLastContact'">
-          {{contact.daysSinceLastContact}}
+        <td data-title="'Days since last contact'" data-sortable="'daysSinceLastContact'"
+          ng-class="{deactivate: toDeactivate(contact)}">
+            {{contact.daysSinceLastContact}}
+            <i class="fa fa-warning" ng-show="toDeactivate(contact)"></i>
         </td>
         <td data-title="'Status'" ng-model="contact.status" data-sortable="'status'">
           <span class="label" ng-class="{'label-warning': contact.status === 'active',

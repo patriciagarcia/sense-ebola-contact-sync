@@ -10,8 +10,8 @@
 angular.module('secsApp')
   // Note: make ngTableParams -> NgTableParams, to make jshint stop complaining
   .controller('ContactsCtrl',
-      ['$scope', '$filter', 'ngTableParams', 'contactFactory',
-      function ($scope, $filter, NgTableParams, contactFactory) {
+      ['$scope', '$filter', 'ngTableParams', 'contactFactory', 'SETTINGS',
+      function ($scope, $filter, NgTableParams, contactFactory, SETTINGS) {
 
     $scope.contacts = [];
 
@@ -38,7 +38,7 @@ angular.module('secsApp')
       $scope.tableParams.reload();
     });
 
-    function toggleStatus(contact) {
+    $scope.toggleStatus = function (contact) {
       var newStatus = (contact.status === 'active' ? 'inactive' : 'active');
       contactFactory.update(contact._id, { 'status': newStatus})
         .then(function(updatedContact) {
@@ -46,5 +46,8 @@ angular.module('secsApp')
         });
     }
 
-    $scope.toggleStatus = toggleStatus;
+    $scope.toDeactivate = function(contact) {
+      return (contact.status === 'active' &&
+        contact.daysSinceLastContact > SETTINGS.incubationPeriod);
+    }
   }]);

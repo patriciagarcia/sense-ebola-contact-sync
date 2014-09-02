@@ -219,6 +219,7 @@ tr.bg-danger .text-danger{
   color: #ffffff;
 }
 
-tr.deactivate {
-  background-color: $green-light;
+td.deactivate {
+  color: $brand-success;
+  font-weight: bold;
 }

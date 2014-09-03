@@ -1,6 +1,11 @@
 Sense Ebola Contact Sync
 ========================
 
+Version 0.1.5
+-------------
+Fix: use prod DB in prod
+Add titles to th elements
+
 Version 0.1.4
 -------------
 Highlight only days since last contact in contacts marked for deactivation.

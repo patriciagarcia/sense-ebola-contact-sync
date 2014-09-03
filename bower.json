@@ -17,7 +17,7 @@
     "angular-ui-bootstrap-bower": "~0.11.0",
     "moment": "~2.7.0",
     "lodash": "~2.4.1",
-    "ng-table": "~0.3.3",
+    "ng-table": "patriciagarcia/ng-table#186371a73ec2c9adb29a196985fa04079810ac46",
     "ngstorage": "~0.3.0",
     "font-awesome": "~4.1.0"
   },

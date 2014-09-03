@@ -561,6 +561,15 @@ module.exports = function(grunt) {
       'htmlmin'
     ];
 
+    // FIXME: temporarily force unminifed prod builds, see item:124, item:134
+    prod = [
+      'ngconstant:prod',
+      'concurrent:dev',
+      'autoprefixer',
+      'copy:dev',
+      'wiredepCopy:dev'
+    ];
+
     if (target === 'prod') {
       grunt.task.run(common.concat(prod));
     } else {

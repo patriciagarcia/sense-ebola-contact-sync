@@ -1,0 +1,66 @@
+<td colspan="6">
+  <ul>
+    <li class="name">
+      {{contact.lastName | name}}, {{contact.otherNames | name}}
+    </li>
+    <li>
+      <span class="title">Status:</span>{{contact.status}}
+    </li>
+    <li>
+      <span class="title">Age:</span>{{contact.age}}
+    </li>
+    <li>
+      <span class="title">Gender:</span>{{contact.gender}}
+    </li>
+    <li>
+      <span class="title">Address:</span>{{contact.address | name}}
+    </li>
+    <li>
+      <span class="title">State:</span>{{contact.state | name}}
+    </li>
+    <li>
+      <span class="title">LGA:</span>{{contact.lga | name}}
+    </li>
+    <li>
+      <span class="title">Phone:</span>{{contact.phone}}
+    </li>
+    <li>
+      <span class="title">Source case:</span>{{contact.sourceCase}}
+    </li>
+    <li>
+      <span class="title">Contact type:</span>{{contact.contactType}}
+    </li>
+    <li>
+      <span class="title">Date of last contact:</span>
+      {{contact.dateLastContact | date:SETTINGS.dateTimeFormat}}
+    </li>
+    <li>
+      <span class="title">Daily visits:</span>
+      <ul>
+        <li class="row">
+          <span class="title col-sm-2">Date of visit</span>
+          <span class="title col-sm-2">Interviewer</span>
+          <span class="title col-sm-2">Temperature</span>
+          <span class="title col-sm-6">Symptoms</span>
+        </li>
+        <li class="row" ng-repeat="visit in contact.dailyVisits">
+          <span class="col-sm-2">
+            {{visit.dateOfVisit | date:SETTINGS.dateTimeFormat}}
+          </span>
+          <span class="interviewer col-sm-2">
+            {{visit.interviewer | name}}
+          </span>
+          <span class="temperature col-sm-2">
+              {{visit.temperature}}°
+          </span>
+          <p class="symptoms col-sm-6" ng-if="visit.symptoms.length">
+            <span class="symptom" ng-repeat="symptom in visit.symptoms">
+              {{symptom}}
+            </span>
+          </p>
+          <p class="symptoms col-sm-6" ng-if="!visit.symptoms.length">
+            -
+          </p>
+        </li>
+    </li>
+</td>

@@ -2,10 +2,10 @@
   <div class="panel-heading">
     Contacts
   </div>
-  <table class="table table-condensed" ng-table="tableParams" show-filter="true">
-    <tr ng-repeat="contact in $data">
+  <table class="contacts table table-condensed" ng-table="tableParams" show-filter="true">
+    <tr class="contact basic" ng-repeat-start="contact in $data" ng-click="showDetails(contact)">
         <td data-title="'Name'" data-sortable="'lastName'">
-          {{contact.lastName | name}}, {{contact.otherNames|name}}
+          {{contact.lastName | name}}, {{contact.otherNames | name}}
         </td>
         <td data-title="'State'" filter="{'state': 'text'}" data-sortable="'state'">
           {{contact.state | name}}
@@ -25,10 +25,13 @@
           </span>
         </td>
         <td data-title="'Change status'">
-          <button ng-click="toggleStatus(contact)">
+          <button ng-click="toggleStatus(contact, $event)">
             Set {{contact.status === 'active' ? 'inactive':'active'}}
           </button>
         </td>
+      </tr>
+      <tr class="contact details" ng-repeat-end ng-if="contact.includingDetailedInfo"
+        ng-include="'views/_contact-details.html'">
       </tr>
   </table>
   <div class="panel-footer compact">

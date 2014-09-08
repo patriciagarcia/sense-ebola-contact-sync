@@ -38,16 +38,25 @@ angular.module('secsApp')
       $scope.tableParams.reload();
     });
 
-    $scope.toggleStatus = function(contact) {
+    $scope.toggleStatus = function(contact, event) {
+      event.stopPropagation();
       var newStatus = (contact.status === 'active' ? 'inactive' : 'active');
       contactFactory.update(contact._id, { 'status': newStatus})
         .then(function(updatedContact) {
             contact.status = updatedContact.status;
         });
-    }
+    };
 
     $scope.toDeactivate = function(contact) {
       return (contact.status === 'active' &&
         contact.daysSinceLastContact > SETTINGS.incubationPeriod);
-    }
+    };
+
+    $scope.showDetails = function(contact) {
+      if (contact.includingDetailedInfo) {
+        contact.includingDetailedInfo = false;
+      } else {
+        contactFactory.addDetails(contact);
+      }
+    };
   }]);

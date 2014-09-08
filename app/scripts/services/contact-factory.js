@@ -68,7 +68,8 @@ angular.module('secsApp')
           state: row.value.state,
           _id: row.value._id,
           daysSinceLastContact: dateParser.daysFromToday(
-            row.value.dateLastContact, row.value.dateFirstVisit)
+            row.value.dateLastContact, row.value.dateFirstVisit),
+          includingDetailedInfo: false
         };
       });
     }
@@ -89,8 +90,57 @@ angular.module('secsApp')
       return d.promise;
     }
 
+    // Add more detailed info to the contact
+    function addDetails(contact) {
+      get(contact._id)
+        .then(function(response) {
+          extendContact(contact, response);
+        });
+    }
+
+    // Extend/update the contact with the data obtained from couchdb
+    function extendContact(contact, response) {
+      contact.lastName              = response.Surname;
+      contact.otherNames            = response.OtherNames;
+      contact.status                = response.status;
+      contact.lga                   = response.LGA;
+      contact.state                 = response.State;
+      contact.dateFirstVisit        = response.dailyVisits[0].dateOfVisit;
+      contact.dateLastContact       = dateParser.toISOStringGuessingFormat(
+                                        response.DateLastContact, contact.dateFirstVisit);
+      contact.daysSinceLastContact  = dateParser.daysFromToday(
+                                        contact.dateLastContact, contact.dateFirstVisit);
+      contact.address               = response.Address;
+      contact.age                   = response.Age;
+      contact.gender                = response.Gender;
+      contact.phone                 = response.Phone;
+      contact.sourceCase            = response.SourceCase;
+      contact.contactType           = response.ContactType;
+      contact.dailyVisits           = response.dailyVisits;
+      contact.includingDetailedInfo = true;
+
+      contact.dailyVisits           = [];
+      angular.forEach(response.dailyVisits, function(visit) {
+        var symptoms = [];
+
+        angular.forEach(visit.symptoms, function(value, key) {
+          if (value && key !== 'temperature') {
+            symptoms.push(key);
+          }
+        });
+
+        contact.dailyVisits.push({
+          dateOfVisit: visit.dateOfVisit,
+          interviewer: visit.interviewer,
+          temperature: visit.symptoms.temperature,
+          symptoms: symptoms
+        });
+      });
+    }
+
     return {
       allOrderedByName: getContactsViewWithStatusByName,
+      addDetails: addDetails,
       update: update,
       get: get
     };

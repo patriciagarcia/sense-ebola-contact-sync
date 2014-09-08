@@ -33,12 +33,12 @@ angular.module('secsApp')
         }
       });
 
-    contactFactory.orderedByName().then(function(contacts) {
+    contactFactory.allOrderedByName().then(function(contacts) {
       $scope.contacts = contacts;
       $scope.tableParams.reload();
     });
 
-    $scope.toggleStatus = function (contact) {
+    $scope.toggleStatus = function(contact) {
       var newStatus = (contact.status === 'active' ? 'inactive' : 'active');
       contactFactory.update(contact._id, { 'status': newStatus})
         .then(function(updatedContact) {

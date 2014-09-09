@@ -138,7 +138,64 @@ angular.module('secsApp')
       });
     }
 
+
+    function mergeContacts(parentId, childrenIds){
+
+      // get parent data
+      get(parentId).then(function(parentComplete) {
+
+        // iterate children
+        childrenIds.forEach(function(childId) {
+
+          // get child data
+          get(childId).then(function(childComplete) {
+            if (!isEmpty(childComplete.duplicateOf)) {
+              // error or ignore?
+              return;
+            }
+
+            // create updates object for parent
+            var updates = {};
+
+            // create duplicates list
+            updates.duplicatesList = parentComplete.duplicatesList || [];
+            
+            // include child in parent's duplicates list
+            updates.duplicatesList.push(childId);
+
+            // compare parent fields with child fields
+            angular.forEach(parentComplete, function(value, key) {
+              if (isEmpty(value) && !isEmpty(childComplete[key]) && !angular.isArray(childComplete[key])) {
+                // merge with child data (if exists)
+                updates[key] = childComplete[key];
+              }
+            });
+
+            // compare child fields with parent fields
+            angular.forEach(childComplete, function(value, key) {
+              if (isEmpty(parentComplete[key]) && !isEmpty(value) && !angular.isArray(value)) {
+                // merge with child data (if parent does not have it)
+                updates[key] = value;
+              }
+            });
+
+            // set duplicateOf in child
+            update(childId, { "duplicateOf" : parentId });
+
+            //console.log(updates);
+            update(parentId, updates);
+          });
+        })
+      });
+      
+    }
+
+    function isEmpty(value) {
+      return value === null || angular.isUndefined(value) || value === "";
+    }
+
     return {
+      mergeContacts: mergeContacts,
       allOrderedByName: getContactsViewWithStatusByName,
       addDetails: addDetails,
       update: update,

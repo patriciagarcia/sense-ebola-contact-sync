@@ -59,4 +59,33 @@ angular.module('secsApp')
         contactFactory.addDetails(contact);
       }
     };
+
+    var contactsToMerge = [];
+    $scope.selectForMerge = function(contact, event) {
+      event.stopPropagation();
+      //console.log(event.target.checked);
+      if (event.target.checked) {
+        contactsToMerge.push(contact._id);
+        if (contactsToMerge.length === 2) {
+          // merge?
+          var confirmed = confirm("Do you want to merge these contacts?");
+          if (confirmed) {
+            // merge
+            contactFactory.mergeContacts(contactsToMerge.shift(), contactsToMerge);
+          } else {
+            // uncheck the last one
+            event.target.checked = false;
+            contactsToMerge.pop();
+          }
+        }
+        //console.log(contactsToMerge);
+      } else {
+        // remove from array
+        var index = contactsToMerge.indexOf(contact._id);
+        if (index !== -1){
+          contactsToMerge.splice(index, 1);
+        }
+      }
+    }
+
   }]);

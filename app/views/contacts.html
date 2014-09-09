@@ -4,6 +4,9 @@
   </div>
   <table class="contacts table table-condensed" ng-table="tableParams" show-filter="true">
     <tr class="contact basic" ng-repeat-start="contact in $data" ng-click="showDetails(contact)">
+        <td data-title="'Merge'">
+          <input type="checkbox" ng-model="contact.selected" ng-click="selectForMerge(contact, $event)">
+        </td>
         <td data-title="'Name'" data-sortable="'lastName'">
           {{contact.lastName | name}}, {{contact.otherNames | name}}
         </td>

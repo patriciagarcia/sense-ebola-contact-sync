@@ -219,7 +219,32 @@ tr.bg-danger .text-danger{
   color: #ffffff;
 }
 
-td.deactivate {
-  color: $brand-success;
-  font-weight: bold;
+.contacts {
+  ul {
+    list-style: none;
+  }
+  .contact {
+    &.basic {
+      cursor: pointer;
+      .deactivate {
+        color: $brand-success;
+        font-weight: bold;
+      }
+    }
+    &.details {
+      background-color: $gray-lighter;
+      .name {
+        font-size: 120%;
+        font-weight: bold;
+      }
+      .title {
+        font-weight: bold;
+        padding-right: 10px;
+      }
+      .symptoms {
+        display: inline-block;
+        margin: 0;
+      }
+    }
+  }
 }

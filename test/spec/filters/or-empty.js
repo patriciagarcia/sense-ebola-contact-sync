@@ -17,9 +17,9 @@ describe('Filter: orEmpty', function () {
   });
 
   it('should return an empty string if the input is undefined or null', function () {
-    var text = undefined;
+    var text;
     expect(orEmpty(text)).toBe('');
-    text = null
+    text = null;
     expect(orEmpty(text)).toBe('');
   });
 });

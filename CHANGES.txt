@@ -1,6 +1,10 @@
 Sense Ebola Contact Sync
 ========================
 
+Version 0.1.6
+-------------
+Show detailed information about the contact on click
+
 Version 0.1.5
 -------------
 Fix: use prod DB in prod

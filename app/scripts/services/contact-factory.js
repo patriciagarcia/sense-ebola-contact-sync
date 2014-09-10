@@ -2,7 +2,7 @@
 
 angular.module('secsApp')
   .factory('contactFactory',
-      function contactFactory($q, $sessionStorage, dateParser, couchdb) {
+      function contactFactory($q, $sessionStorage, $window, dateParser, couchdb) {
 
     var DB_NAME = 'sense_contacts';
 
@@ -138,11 +138,13 @@ angular.module('secsApp')
       });
     }
 
-
     function mergeContacts(parentId, childrenIds){
 
       // get parent data
       get(parentId).then(function(parentComplete) {
+
+        // create updates object for parent
+        var updates = {};
 
         // iterate children
         childrenIds.forEach(function(childId) {
@@ -150,16 +152,14 @@ angular.module('secsApp')
           // get child data
           get(childId).then(function(childComplete) {
             if (!isEmpty(childComplete.duplicateOf)) {
+              // child has already been merged as duplicate of another contact
               // error or ignore?
               return;
             }
 
-            // create updates object for parent
-            var updates = {};
-
             // create duplicates list
             updates.duplicatesList = parentComplete.duplicatesList || [];
-            
+
             // include child in parent's duplicates list
             updates.duplicatesList.push(childId);
 
@@ -179,19 +179,49 @@ angular.module('secsApp')
               }
             });
 
-            // set duplicateOf in child
-            update(childId, { "duplicateOf" : parentId });
+            // merge dailyVisits array
+            updates.dailyVisits = mergeDailyVisits(parentComplete.dailyVisits, childComplete.dailyVisits);
 
-            //console.log(updates);
-            update(parentId, updates);
+            // set duplicateOf in child
+            update(childId, { 'duplicateOf' : parentId });
+
           });
-        })
+        });
+
+        update(parentId, updates);
       });
-      
     }
 
     function isEmpty(value) {
       return value === null || angular.isUndefined(value) || value === "";
+    }
+
+    function mergeDailyVisits(parentVisits, childVisits) {
+      var mergedVisits = [];
+
+      parentVisits = parentVisits || [];
+      childVisits = childVisits || [];
+
+      while (parentVisits.length > 0 || childVisits.length > 0) {
+        if (parentVisits.length === 0) {
+          mergedVisits = mergedVisits.concat(childVisits);
+          childVisits = [];
+        } else if (childVisits.length === 0) {
+          mergedVisits = mergedVisits.concat(parentVisits);
+          parentVisits = [];
+        } else {
+          if ($window.moment(parentVisits[0].dateOfVisit).isBefore(childVisits[0].dateOfVisit)) {
+            mergedVisits.push(parentVisits.shift());
+          } else if ($window.moment(childVisits[0].dateOfVisit).isBefore(parentVisits[0].dateOfVisit)) {
+            mergedVisits.push(childVisits.shift());
+          } else { // same date: take parent, discard child
+            mergedVisits.push(parentVisits.shift());
+            childVisits.shift();
+          }
+        }
+      }
+
+      return mergedVisits;
     }
 
     return {

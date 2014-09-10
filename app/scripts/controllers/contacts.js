@@ -63,7 +63,6 @@ angular.module('secsApp')
     var contactsToMerge = [];
     $scope.selectForMerge = function(contact, event) {
       event.stopPropagation();
-      //console.log(event.target.checked);
       if (event.target.checked) {
         contactsToMerge.push(contact._id);
         if (contactsToMerge.length === 2) {
@@ -78,7 +77,6 @@ angular.module('secsApp')
             contactsToMerge.pop();
           }
         }
-        //console.log(contactsToMerge);
       } else {
         // remove from array
         var index = contactsToMerge.indexOf(contact._id);

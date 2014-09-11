@@ -32,6 +32,7 @@ angular.module('secsApp')
           $defer.resolve(orderedData);
         }
       });
+    $scope.tableParams.settings().$scope = $scope;
 
     contactFactory.allOrderedByName().then(function(contacts) {
       $scope.contacts = contacts;
@@ -64,13 +65,40 @@ angular.module('secsApp')
     $scope.selectForMerge = function(contact, event) {
       event.stopPropagation();
       if (event.target.checked) {
-        contactsToMerge.push(contact._id);
+        contactsToMerge.push(contact);
         if (contactsToMerge.length === 2) {
           // merge?
-          var confirmed = confirm("Do you want to merge these contacts?");
+          var confirmed = window.confirm('Do you want to merge these contacts?');
           if (confirmed) {
             // merge
-            contactFactory.mergeContacts(contactsToMerge.shift(), contactsToMerge);
+            var parent = contactsToMerge.shift();
+            contactFactory.mergeContacts(parent, contactsToMerge)
+              .then(function(){
+
+                // if parent is detailed then reload detail
+                if (parent.includingDetailedInfo) {
+                  parent.includingDetailedInfo = false;
+                  contactFactory.addDetails(parent);              
+                }
+                parent.selected = false;
+                
+                // uncheck
+                event.target.checked = false;
+                // empty contacts to merge array
+                while (contactsToMerge.length > 0) {
+                  var c = contactsToMerge.pop();
+                  // remove from contacts
+                  for (var i=0; i < $scope.contacts.length; i++) {
+                    if ($scope.contacts[i]._id === c._id) {
+                      $scope.contacts.splice(i, 1);
+                      break;
+                    }
+                  }
+                }
+                // reload table
+                $scope.tableParams.reload();
+              });
+
           } else {
             // uncheck the last one
             event.target.checked = false;
@@ -79,11 +107,39 @@ angular.module('secsApp')
         }
       } else {
         // remove from array
-        var index = contactsToMerge.indexOf(contact._id);
-        if (index !== -1){
-          contactsToMerge.splice(index, 1);
-        }
+        removeItemFromArray(contactsToMerge, contact);
+      }
+    };
+
+    function removeItemFromArray(arr, item){
+      var index = arr.indexOf(item);
+      if (index !== -1) {
+        arr.splice(index, 1);
       }
     }
 
-  }]);
+  }])
+  .directive('contactDetail', function($compile) {
+    return {
+      templateUrl: 'views/_contact-details.html',
+      restrict: 'E',
+      transclude: true,
+      scope: {
+        person: '=ngModel'
+      },
+      compile: function(tElement) {
+        var contents = tElement.contents().remove();
+        var compiledContents;
+        return function(scope, iElement) {
+          if (!compiledContents) {
+            compiledContents = $compile(contents);
+          }
+          compiledContents(scope, function(clone) {
+            iElement.append(clone); 
+          });
+        };
+      },
+      controller: 'ContactsCtrl'
+    };
+  })
+;

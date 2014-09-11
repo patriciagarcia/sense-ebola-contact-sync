@@ -69,6 +69,7 @@ angular.module('secsApp')
           _id: row.value._id,
           daysSinceLastContact: dateParser.daysFromToday(
             row.value.dateLastContact, row.value.dateFirstVisit),
+          duplicateOf : row.value.duplicateOf,
           includingDetailedInfo: false
         };
       });
@@ -117,7 +118,6 @@ angular.module('secsApp')
       contact.sourceCase            = response.SourceCase;
       contact.contactType           = response.ContactType;
       contact.dailyVisits           = response.dailyVisits;
-      contact.includingDetailedInfo = true;
 
       contact.dailyVisits           = [];
       angular.forEach(response.dailyVisits, function(visit) {
@@ -136,45 +136,73 @@ angular.module('secsApp')
           symptoms: symptoms
         });
       });
+
+      // duplicated contacts list
+      if (response.duplicatesList && response.duplicatesList.length > 0) {
+        contact.duplicatesList = [];
+
+        var promises = [];
+        response.duplicatesList.forEach(function(contactDuplicatedId) {
+          // get duplicates info
+          var contactDuplicated = { '_id' : contactDuplicatedId };
+          promises.push(get(contactDuplicatedId)
+            .then(function(reponseDuplicated) {
+              contactDuplicated.lastName   = reponseDuplicated.Surname;
+              contactDuplicated.otherNames = reponseDuplicated.OtherNames;
+              //extendContact(contactDuplicated, reponseDuplicated);
+              contact.duplicatesList.push(contactDuplicated);
+            }));
+        });
+        
+        $q.all(promises).then(function() {
+          contact.includingDetailedInfo = true;
+        });
+
+      } else {
+        contact.includingDetailedInfo = true;
+      }
     }
 
-    function mergeContacts(parentId, childrenIds){
+    function mergeContacts(parent, children) {
+      var d = $q.defer();
 
       // get parent data
+      var parentId = parent._id;
       get(parentId).then(function(parentComplete) {
 
         // create updates object for parent
         var updates = {};
 
+        // create duplicates list
+        updates.duplicatesList = parentComplete.duplicatesList || [];
+
+        var childrenPromises = [];
+
         // iterate children
-        childrenIds.forEach(function(childId) {
+        children.forEach(function(child) {
+          var childId = child._id;
 
           // get child data
-          get(childId).then(function(childComplete) {
+          childrenPromises.push(get(childId).then(function(childComplete) {
             if (!isEmpty(childComplete.duplicateOf)) {
-              // child has already been merged as duplicate of another contact
+              // child has already been merged as duplicated of another contact
               // error or ignore?
               return;
             }
-
-            // create duplicates list
-            updates.duplicatesList = parentComplete.duplicatesList || [];
 
             // include child in parent's duplicates list
             updates.duplicatesList.push(childId);
 
             // compare parent fields with child fields
             angular.forEach(parentComplete, function(value, key) {
-              if (isEmpty(value) && !isEmpty(childComplete[key]) && !angular.isArray(childComplete[key])) {
-                // merge with child data (if exists)
+              if (isBetterChildValue(value, childComplete[key])) {
                 updates[key] = childComplete[key];
               }
             });
 
             // compare child fields with parent fields
             angular.forEach(childComplete, function(value, key) {
-              if (isEmpty(parentComplete[key]) && !isEmpty(value) && !angular.isArray(value)) {
-                // merge with child data (if parent does not have it)
+              if (isBetterChildValue(parentComplete[key], value)) {
                 updates[key] = value;
               }
             });
@@ -185,15 +213,38 @@ angular.module('secsApp')
             // set duplicateOf in child
             update(childId, { 'duplicateOf' : parentId });
 
-          });
+          })
+          .catch(function(error) {
+            d.reject(error);
+          }));
+
         });
 
-        update(parentId, updates);
+        $q.all(childrenPromises).then(function() {
+          // update parent data
+          update(parentId, updates)
+            .then(function(){
+              d.resolve('merged') ;
+            })
+            .catch(function(error) {
+              d.reject(error);
+            });
+        });
+
+      })
+      .catch(function(error) {
+        d.reject(error);
       });
+
+      return d.promise;
     }
 
     function isEmpty(value) {
-      return value === null || angular.isUndefined(value) || value === "";
+      return value === null || angular.isUndefined(value) || value === '';
+    }
+
+    function isBetterChildValue(parentValue, childValue) {
+      return isEmpty(parentValue) && !isEmpty(childValue) && !angular.isArray(childValue);
     }
 
     function mergeDailyVisits(parentVisits, childVisits) {

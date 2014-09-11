@@ -3,7 +3,8 @@
     Contacts
   </div>
   <table class="contacts table table-condensed" ng-table="tableParams" show-filter="true">
-    <tr class="contact basic" ng-repeat-start="contact in $data" ng-click="showDetails(contact)">
+    <tr class="contact basic" ng-repeat-start="contact in $data" ng-click="showDetails(contact)"
+      ng-class="{'warning': contact.selected}">
         <td data-title="'Merge'">
           <input type="checkbox" ng-model="contact.selected" ng-click="selectForMerge(contact, $event)">
         </td>
@@ -33,8 +34,10 @@
           </button>
         </td>
       </tr>
-      <tr class="contact details" ng-repeat-end ng-if="contact.includingDetailedInfo"
-        ng-include="'views/_contact-details.html'">
+      <tr class="contact details" ng-repeat-end ng-if="contact.includingDetailedInfo">
+        <td colspan="7">
+          <contact-detail ng-model="contact"></contact-detail>
+        </td>
       </tr>
   </table>
   <div class="panel-footer compact">

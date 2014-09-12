@@ -32,6 +32,7 @@ angular.module('secsApp')
           $defer.resolve(orderedData);
         }
       });
+
     $scope.tableParams.settings().$scope = $scope;
 
     contactFactory.allOrderedByName().then(function(contacts) {
@@ -63,7 +64,7 @@ angular.module('secsApp')
 
     var parentToMerge = null;
 
-    $scope.selectParentForMerge = function(contact, event) {
+    $scope.toggleSelectParentForMerge = function(contact, event) {
       event.stopPropagation();
       parentToMerge = (parentToMerge)? null : contact;
     };
@@ -81,26 +82,21 @@ angular.module('secsApp')
       if (confirmed) {
         // merge
         contactFactory.mergeContacts(parentToMerge, [contact])
-          .then(function(){
+          .then(function(updates){
 
-            // if parent is detailed then reload detail
-            if (parentToMerge.includingDetailedInfo) {
-              parentToMerge.includingDetailedInfo = false;
-              contactFactory.addDetails(parentToMerge);
-            }
+            angular.forEach(updates.parentUpdates, function(value, key) {
+              parentToMerge[key] = value;
+            });
+
+            contact.includingDetailedInfo = false;
+
+            angular.forEach(updates.childUpdates, function(value, key) {
+              contact[key] = value;
+            });
+
             parentToMerge.selected = false;
             parentToMerge = null;
 
-            // remove duplicated from contacts
-            for (var i=0; i < $scope.contacts.length; i++) {
-              if ($scope.contacts[i]._id === contact._id) {
-                $scope.contacts.splice(i, 1);
-                break;
-              }
-            }
-
-            // reload table
-            $scope.tableParams.reload();
           });
       }
     };

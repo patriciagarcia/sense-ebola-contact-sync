@@ -9,7 +9,8 @@ angular.module('secsApp')
       scope: {
         person: '=ngModel'
       },
-      // to allow recursion calls
+      // Allow nesting of contactDetail directives,
+      // used when a duplicate contact has duplicates itself
       compile: function(tElement) {
         var contents = tElement.contents().remove();
         var compiledContents;
@@ -18,7 +19,7 @@ angular.module('secsApp')
             compiledContents = $compile(contents);
           }
           compiledContents(scope, function(clone) {
-            iElement.append(clone); 
+            iElement.append(clone);
           });
         };
       },

@@ -245,6 +245,22 @@ tr.bg-danger .text-danger{
         display: inline-block;
         margin: 0;
       }
+      .duplicates {
+        margin: 20px 40px 0 0;
+        padding-top: 10px;
+        border-top: 1px solid #ccc;
+
+        .contact.details {
+          background-color: #fff;
+          margin-top: 5px;
+          padding: 20px 0;
+        }
+
+        .duplicate {
+          button { margin-left: 20px; }
+          margin-top: 10px;
+        }
+      }
     }
   }
 }

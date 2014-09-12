@@ -5,7 +5,7 @@
   <table class="contacts table table-condensed" ng-table="tableParams" show-filter="true">
     <tr class="contact basic" ng-repeat-start="contact in $data" ng-click="showDetails(contact)"
       ng-class="{'warning': isParentMerge(contact), 'info': isChildMerge(contact)}">
-        <td data-title="'Merge'">
+        <td data-title="'Merge'" data-header-title="Merge two contacts together">
           <input type="checkbox" ng-model="contact.selected" ng-click="selectForMerge(contact, $event)">
         </td>
         <td data-title="'Name'" data-sortable="'lastName'">

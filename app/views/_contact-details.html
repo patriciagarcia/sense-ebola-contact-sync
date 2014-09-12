@@ -63,13 +63,15 @@
       </li>
     </ul>
   </li>
-  <li ng-if="person.duplicatesList">
+  <li class="duplicates" ng-if="person.duplicatesList">
     <span class="title">Merged contacts:</span>
-    <div ng-repeat="duplicated in person.duplicatesList">
-      <button type="button" ng-click="showDetails(duplicated)">
-        <span ng-if="!duplicated.includingDetailedInfo">+</span><span ng-if="duplicated.includingDetailedInfo">-</span>
-      </button> <span class="title">{{duplicated.lastName | name}}, {{duplicated.otherNames | name}}<span>
-      <div class="panel panel-default compact" ng-if="duplicated.includingDetailedInfo">
+    <div class="duplicate" ng-repeat="duplicated in person.duplicatesList">
+      <span>{{duplicated.lastName | name}}, {{duplicated.otherNames | name}}<span>
+      <button type="button" class="btn btn-info btn-xs" ng-click="showDetails(duplicated)">
+        <span ng-if="!duplicated.includingDetailedInfo">More info</span>
+        <span ng-if="duplicated.includingDetailedInfo">Less info</span>
+      </button>
+      <div class="contact details" ng-if="duplicated.includingDetailedInfo">
         <contact-detail ng-model="duplicated"></contact-detail>
       </div>
     </div>

@@ -29,7 +29,9 @@
           </span>
         </td>
         <td data-title="'Change status'">
-          <button ng-click="toggleStatus(contact, $event)">
+          <button class="btn btn-xs" ng-click="toggleStatus(contact, $event)"
+            ng-class="{'btn-default': !toDeactivate(contact),
+                       'btn-success': toDeactivate(contact)}">
             Set {{contact.status === 'active' ? 'inactive':'active'}}
           </button>
         </td>

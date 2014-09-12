@@ -4,7 +4,7 @@
   </div>
   <table class="contacts table table-condensed" ng-table="tableParams" show-filter="true">
     <tr class="contact basic" ng-repeat-start="contact in $data" ng-click="showDetails(contact)"
-      ng-class="{'warning': contact.selected}">
+      ng-class="{'warning': isParentMerge(contact), 'info': isChildMerge(contact)}">
         <td data-title="'Merge'">
           <input type="checkbox" ng-model="contact.selected" ng-click="selectForMerge(contact, $event)">
         </td>

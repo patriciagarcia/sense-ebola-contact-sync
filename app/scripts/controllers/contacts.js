@@ -111,6 +111,14 @@ angular.module('secsApp')
       }
     };
 
+    $scope.isParentMerge = function(contact) {
+      return contact.selected && contactsToMerge[0] === contact;
+    };
+
+    $scope.isChildMerge = function(contact) {
+      return contact.selected && contactsToMerge[0] !== contact;
+    };
+
     function removeItemFromArray(arr, item){
       var index = arr.indexOf(item);
       if (index !== -1) {
@@ -119,27 +127,4 @@ angular.module('secsApp')
     }
 
   }])
-  .directive('contactDetail', function($compile) {
-    return {
-      templateUrl: 'views/_contact-details.html',
-      restrict: 'E',
-      transclude: true,
-      scope: {
-        person: '=ngModel'
-      },
-      compile: function(tElement) {
-        var contents = tElement.contents().remove();
-        var compiledContents;
-        return function(scope, iElement) {
-          if (!compiledContents) {
-            compiledContents = $compile(contents);
-          }
-          compiledContents(scope, function(clone) {
-            iElement.append(clone); 
-          });
-        };
-      },
-      controller: 'ContactsCtrl'
-    };
-  })
 ;

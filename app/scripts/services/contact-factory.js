@@ -69,7 +69,6 @@ angular.module('secsApp')
           _id: row.value._id,
           daysSinceLastContact: dateParser.daysFromToday(
             row.value.dateLastContact, row.value.dateFirstVisit),
-          duplicateOf : row.value.duplicateOf,
           includingDetailedInfo: false
         };
       });

@@ -3,54 +3,52 @@
     Contacts
   </div>
   <table class="contacts table table-condensed" ng-table="tableParams" show-filter="true">
-    <tr class="contact basic" ng-if="!contact.duplicateOf" ng-repeat-start="contact in $data"
-        ng-click="showDetails(contact)"
-        ng-class="{'warning': isParentMerge(contact)}">
-      <td data-title="'Merge'" data-header-title="Merge two contacts together">
-        <button type="button" class="btn btn-xs btn-default" ng-model="contact.selected"
-          ng-if="isEmptyMerge() || isParentMerge(contact)"
-          ng-click="toggleSelectParentForMerge(contact, $event)" btn-checkbox>
-          <span ng-if="isEmptyMerge()">Select</span>
-          <span ng-if="!isEmptyMerge()">Unselect</span>
-        </button>
-        <button type="button" class="btn btn-xs btn-success"
-          ng-if="!isEmptyMerge() && !isParentMerge(contact)"
-          ng-click="mergeContactIntoParent(contact, $event)">Merge
-        </button>
-      </td>
-      <td data-title="'Name'" data-sortable="'lastName'">
-        {{contact.lastName | name}}, {{contact.otherNames | name}}
-      </td>
-      <td data-title="'State'" filter="{'state': 'text'}" data-sortable="'state'">
-        {{contact.state | name}}
-      </td>
-      <td data-title="'LGA'" filter="{'lga': 'text'}" data-sortable="'lga'">
-        {{contact.lga | name}}
-      </td>
-      <td data-title="'Days since last contact'" data-sortable="'daysSinceLastContact'"
-        ng-class="{deactivate: toDeactivate(contact)}">
-        {{contact.daysSinceLastContact}}
-        <i class="fa fa-warning" ng-show="toDeactivate(contact)"></i>
-      </td>
-      <td data-title="'Status'" ng-model="contact.status" data-sortable="'status'">
-        <span class="label" ng-class="{'label-warning': contact.status === 'active',
-          'label-default': contact.status === 'inactive'}">
-          {{contact.status}}
-        </span>
-      </td>
-      <td data-title="'Change status'">
-        <button class="btn btn-xs" ng-click="toggleStatus(contact, $event)"
-          ng-class="{'btn-default': !toDeactivate(contact),
-          'btn-success': toDeactivate(contact)}">
-          Set {{contact.status === 'active' ? 'inactive':'active'}}
-        </button>
-      </td>
-    </tr>
-    <tr class="contact details" ng-repeat-end ng-if="contact.includingDetailedInfo">
-      <td colspan="7">
-        <contact-detail ng-model="contact"></contact-detail>
-      </td>
-    </tr>
+    <tr class="contact basic" ng-if="!contact.duplicateOf" ng-repeat-start="contact in $data" ng-click="showDetails(contact)"
+      ng-class="{'warning': isParentMerge(contact)}">
+        <td data-title="'Merge'" data-header-title="Merge two contacts together">
+          <button type="button" class="btn btn-xs btn-default" ng-model="contact.selected"
+            ng-if="isEmptyMerge() || isParentMerge(contact)"
+            ng-click="toggleSelectParentForMerge(contact, $event)" btn-checkbox>
+            <span ng-if="isEmptyMerge()">Select</span>
+            <span ng-if="!isEmptyMerge()">Unselect</span>
+          </button>
+          <button type="button" class="btn btn-xs btn-success"
+            ng-if="!isEmptyMerge() && !isParentMerge(contact)"
+            ng-click="mergeContactIntoParent(contact, $event)">Merge</button>
+        </td>
+        <td data-title="'Name'" data-sortable="'lastName'">
+          {{contact.lastName | name}}, {{contact.otherNames | name}}
+        </td>
+        <td data-title="'State'" filter="{'state': 'text'}" data-sortable="'state'">
+          {{contact.state | name}}
+        </td>
+        <td data-title="'LGA'" filter="{'lga': 'text'}" data-sortable="'lga'">
+          {{contact.lga | name}}
+        </td>
+        <td data-title="'Days since last contact'" data-sortable="'daysSinceLastContact'"
+          ng-class="{deactivate: toDeactivate(contact)}">
+            {{contact.daysSinceLastContact}}
+            <i class="fa fa-warning" ng-show="toDeactivate(contact)"></i>
+        </td>
+        <td data-title="'Status'" ng-model="contact.status" data-sortable="'status'">
+          <span class="label" ng-class="{'label-warning': contact.status === 'active',
+                                         'label-default': contact.status === 'inactive'}">
+            {{contact.status}}
+          </span>
+        </td>
+        <td data-title="'Change status'">
+          <button class="btn btn-xs" ng-click="toggleStatus(contact, $event)"
+              ng-class="{'btn-default': !toDeactivate(contact),
+                         'btn-success': toDeactivate(contact)}">
+            Set {{contact.status === 'active' ? 'inactive':'active'}}
+          </button>
+        </td>
+      </tr>
+      <tr class="contact details" ng-repeat-end ng-if="contact.includingDetailedInfo">
+        <td colspan="7">
+          <contact-detail ng-model="contact"></contact-detail>
+        </td>
+      </tr>
   </table>
   <div class="panel-footer compact">
   </div>

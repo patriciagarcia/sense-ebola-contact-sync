@@ -65,7 +65,7 @@ angular.module('secsApp')
 
     $scope.selectParentForMerge = function(contact, event) {
       event.stopPropagation();
-      parentToMerge = (event.target.checked)? contact : null;
+      parentToMerge = (parentToMerge)? null : contact;
     };
 
     $scope.mergeContactIntoParent = function(contact, event){
@@ -73,7 +73,7 @@ angular.module('secsApp')
       var parentData = getContactMainData(parentToMerge);
       var childData  = getContactMainData(contact);
       var confirmMsg = 'Do you want to merge\n\n' +
-              childData + '\n\n into\n\n' + parentData + '?' \n\n
+              childData + '\n\n into\n\n' + parentData + '? \n\n' +
               '(Fields from ' + parentData + ' will have priority)';
 
       // merge?
@@ -111,17 +111,6 @@ angular.module('secsApp')
 
     $scope.isParentMerge = function(contact) {
       return !$scope.isEmptyMerge() && parentToMerge === contact;
-    };
-
-    $scope.getMergeCheckboxTooltip = function() {
-      return (($scope.isEmptyMerge()) ? 'Select': 'Unselect') +
-          ' main duplicated contact to merge';
-    };
-
-    $scope.getMergeButtonTooltip = function(contact) {
-      return 'Merge<br>' + getContactMainData(contact) + 
-          '<br> into<br>' + 
-          getContactMainData(parentToMerge);
     };
 
     function getContactMainData(contact) {

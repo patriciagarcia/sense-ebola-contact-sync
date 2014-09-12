@@ -72,8 +72,9 @@ angular.module('secsApp')
       event.stopPropagation();
       var parentData = getContactMainData(parentToMerge);
       var childData  = getContactMainData(contact);
-      var confirmMsg = 'Do you want to merge this contact\n\n' + 
-          childData + '\n\n into this one \n\n' + parentData + '?';
+      var confirmMsg = 'Do you want to merge\n\n' +
+              childData + '\n\n into\n\n' + parentData + '?' \n\n
+              '(Fields from ' + parentData + ' will have priority)';
 
       // merge?
       var confirmed = window.confirm(confirmMsg);
@@ -85,11 +86,11 @@ angular.module('secsApp')
             // if parent is detailed then reload detail
             if (parentToMerge.includingDetailedInfo) {
               parentToMerge.includingDetailedInfo = false;
-              contactFactory.addDetails(parentToMerge);              
+              contactFactory.addDetails(parentToMerge);
             }
             parentToMerge.selected = false;
             parentToMerge = null;
-            
+
             // remove duplicated from contacts
             for (var i=0; i < $scope.contacts.length; i++) {
               if ($scope.contacts[i]._id === contact._id) {

@@ -61,70 +61,77 @@ angular.module('secsApp')
       }
     };
 
-    var contactsToMerge = [];
-    $scope.selectForMerge = function(contact, event) {
+    var parentToMerge = null;
+
+    $scope.selectParentForMerge = function(contact, event) {
       event.stopPropagation();
-      if (event.target.checked) {
-        contactsToMerge.push(contact);
-        if (contactsToMerge.length === 2) {
-          // merge?
-          var confirmed = window.confirm('Do you want to merge these contacts?');
-          if (confirmed) {
-            // merge
-            var parent = contactsToMerge.shift();
-            contactFactory.mergeContacts(parent, contactsToMerge)
-              .then(function(){
+      parentToMerge = (event.target.checked)? contact : null;
+    };
 
-                // if parent is detailed then reload detail
-                if (parent.includingDetailedInfo) {
-                  parent.includingDetailedInfo = false;
-                  contactFactory.addDetails(parent);              
-                }
-                parent.selected = false;
-                
-                // uncheck
-                event.target.checked = false;
-                // empty contacts to merge array
-                while (contactsToMerge.length > 0) {
-                  var c = contactsToMerge.pop();
-                  // remove from contacts
-                  for (var i=0; i < $scope.contacts.length; i++) {
-                    if ($scope.contacts[i]._id === c._id) {
-                      $scope.contacts.splice(i, 1);
-                      break;
-                    }
-                  }
-                }
-                // reload table
-                $scope.tableParams.reload();
-              });
+    $scope.mergeContactIntoParent = function(contact, event){
+      event.stopPropagation();
+      var parentData = getContactMainData(parentToMerge);
+      var childData  = getContactMainData(contact);
+      var confirmMsg = 'Do you want to merge this contact\n\n' + 
+          childData + '\n\n into this one \n\n' + parentData + '?';
 
-          } else {
-            // uncheck the last one
-            event.target.checked = false;
-            contactsToMerge.pop();
-          }
-        }
-      } else {
-        // remove from array
-        removeItemFromArray(contactsToMerge, contact);
+      // merge?
+      var confirmed = window.confirm(confirmMsg);
+      if (confirmed) {
+        // merge
+        contactFactory.mergeContacts(parentToMerge, [contact])
+          .then(function(){
+
+            // if parent is detailed then reload detail
+            if (parentToMerge.includingDetailedInfo) {
+              parentToMerge.includingDetailedInfo = false;
+              contactFactory.addDetails(parentToMerge);              
+            }
+            parentToMerge.selected = false;
+            parentToMerge = null;
+            
+            // remove duplicated from contacts
+            for (var i=0; i < $scope.contacts.length; i++) {
+              if ($scope.contacts[i]._id === contact._id) {
+                $scope.contacts.splice(i, 1);
+                break;
+              }
+            }
+
+            // reload table
+            $scope.tableParams.reload();
+          });
       }
+    };
+
+    $scope.isEmptyMerge = function() {
+      return parentToMerge === null;
     };
 
     $scope.isParentMerge = function(contact) {
-      return contact.selected && contactsToMerge[0] === contact;
+      return !$scope.isEmptyMerge() && parentToMerge === contact;
     };
 
-    $scope.isChildMerge = function(contact) {
-      return contact.selected && contactsToMerge[0] !== contact;
+    $scope.getMergeCheckboxTooltip = function() {
+      return (($scope.isEmptyMerge()) ? 'Select': 'Unselect') +
+          ' main duplicated contact to merge';
     };
 
-    function removeItemFromArray(arr, item){
-      var index = arr.indexOf(item);
-      if (index !== -1) {
-        arr.splice(index, 1);
-      }
+    $scope.getMergeButtonTooltip = function(contact) {
+      return 'Merge<br>' + getContactMainData(contact) + 
+          '<br> into<br>' + 
+          getContactMainData(parentToMerge);
+    };
+
+    function getContactMainData(contact) {
+      return filterValueByFilter(contact.lastName, 'name') +
+          ', ' + filterValueByFilter(contact.otherNames, 'name') +
+          ' (' + filterValueByFilter(contact.state, 'name') +
+          ', ' + filterValueByFilter(contact.lga, 'name') + ')';
     }
 
-  }])
-;
+    function filterValueByFilter(value, filter){
+      return (value) ? $filter(filter)(value) : '---';
+    }
+
+  }]);

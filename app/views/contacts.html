@@ -3,10 +3,18 @@
     Contacts
   </div>
   <table class="contacts table table-condensed" ng-table="tableParams" show-filter="true">
-    <tr class="contact basic" ng-repeat-start="contact in $data" ng-click="showDetails(contact)"
-      ng-class="{'warning': contact.selected}">
-        <td data-title="'Merge'">
-          <input type="checkbox" ng-model="contact.selected" ng-click="selectForMerge(contact, $event)">
+    <tr class="contact basic" ng-if="!contact.duplicateOf" ng-repeat-start="contact in $data" ng-click="showDetails(contact)"
+      ng-class="{'warning': isParentMerge(contact)}">
+        <td data-title="'Merge'" data-header-title="Merge two contacts together">
+          <button type="button" class="btn btn-xs btn-default" ng-model="contact.selected"
+            ng-if="isEmptyMerge() || isParentMerge(contact)"
+            ng-click="toggleSelectParentForMerge(contact, $event)" btn-checkbox>
+            <span ng-if="isEmptyMerge()">Select</span>
+            <span ng-if="!isEmptyMerge()">Unselect</span>
+          </button>
+          <button type="button" class="btn btn-xs btn-success"
+            ng-if="!isEmptyMerge() && !isParentMerge(contact)"
+            ng-click="mergeContactIntoParent(contact, $event)">Merge</button>
         </td>
         <td data-title="'Name'" data-sortable="'lastName'">
           {{contact.lastName | name}}, {{contact.otherNames | name}}
@@ -30,8 +38,8 @@
         </td>
         <td data-title="'Change status'">
           <button class="btn btn-xs" ng-click="toggleStatus(contact, $event)"
-            ng-class="{'btn-default': !toDeactivate(contact),
-                       'btn-success': toDeactivate(contact)}">
+              ng-class="{'btn-default': !toDeactivate(contact),
+                         'btn-success': toDeactivate(contact)}">
             Set {{contact.status === 'active' ? 'inactive':'active'}}
           </button>
         </td>

@@ -69,7 +69,6 @@ angular.module('secsApp')
           _id: row.value._id,
           daysSinceLastContact: dateParser.daysFromToday(
             row.value.dateLastContact, row.value.dateFirstVisit),
-          duplicateOf : row.value.duplicateOf,
           includingDetailedInfo: false
         };
       });
@@ -99,6 +98,36 @@ angular.module('secsApp')
         });
     }
 
+    function parseDailyVisits(dailyVisits) {
+      var parsedDailyVisits = [];
+      angular.forEach(dailyVisits, function(visit) {
+        var symptoms = [];
+
+        angular.forEach(visit.symptoms, function(value, key) {
+          if (value && key !== 'temperature') {
+            symptoms.push(key);
+          }
+        });
+
+        parsedDailyVisits.push({
+          dateOfVisit: visit.dateOfVisit,
+          interviewer: visit.interviewer,
+          temperature: visit.symptoms.temperature,
+          symptoms: symptoms
+        });
+      });
+
+      return parsedDailyVisits;
+    }
+
+    function parseContactDuplicate(contact) {
+      return {
+        _id: contact._id,
+        lastName: contact.Surname,
+        otherNames: contact.OtherNames
+      };
+    }
+
     // Extend/update the contact with the data obtained from couchdb
     function extendContact(contact, response) {
       contact.lastName              = response.Surname;
@@ -117,25 +146,7 @@ angular.module('secsApp')
       contact.phone                 = response.Phone;
       contact.sourceCase            = response.SourceCase;
       contact.contactType           = response.ContactType;
-      contact.dailyVisits           = response.dailyVisits;
-
-      contact.dailyVisits           = [];
-      angular.forEach(response.dailyVisits, function(visit) {
-        var symptoms = [];
-
-        angular.forEach(visit.symptoms, function(value, key) {
-          if (value && key !== 'temperature') {
-            symptoms.push(key);
-          }
-        });
-
-        contact.dailyVisits.push({
-          dateOfVisit: visit.dateOfVisit,
-          interviewer: visit.interviewer,
-          temperature: visit.symptoms.temperature,
-          symptoms: symptoms
-        });
-      });
+      contact.dailyVisits           = parseDailyVisits(response.dailyVisits);
 
       // duplicated contacts list
       if (response.duplicatesList && response.duplicatesList.length > 0) {
@@ -144,16 +155,12 @@ angular.module('secsApp')
         var promises = [];
         response.duplicatesList.forEach(function(contactDuplicatedId) {
           // get duplicates info
-          var contactDuplicated = { '_id' : contactDuplicatedId };
           promises.push(get(contactDuplicatedId)
-            .then(function(reponseDuplicated) {
-              contactDuplicated.lastName   = reponseDuplicated.Surname;
-              contactDuplicated.otherNames = reponseDuplicated.OtherNames;
-              //extendContact(contactDuplicated, reponseDuplicated);
-              contact.duplicatesList.push(contactDuplicated);
+            .then(function(responseDuplicated) {
+              contact.duplicatesList.push(parseContactDuplicate(responseDuplicated));
             }));
         });
-        
+
         $q.all(promises).then(function() {
           contact.includingDetailedInfo = true;
         });
@@ -170,11 +177,13 @@ angular.module('secsApp')
       var parentId = parent._id;
       get(parentId).then(function(parentComplete) {
 
-        // create updates object for parent
-        var updates = {};
+        // create updates objects
+        var parentUpdates = {};
+        var childUpdates = {duplicateOf: parentId};
+        var parentDuplicates = [];
 
         // create duplicates list
-        updates.duplicatesList = parentComplete.duplicatesList || [];
+        parentUpdates.duplicatesList = parentComplete.duplicatesList || [];
 
         var childrenPromises = [];
 
@@ -191,27 +200,29 @@ angular.module('secsApp')
             }
 
             // include child in parent's duplicates list
-            updates.duplicatesList.push(childId);
+            parentUpdates.duplicatesList.push(childId);
 
             // compare parent fields with child fields
             angular.forEach(parentComplete, function(value, key) {
               if (isBetterChildValue(value, childComplete[key])) {
-                updates[key] = childComplete[key];
+                parentUpdates[key] = childComplete[key];
               }
             });
 
             // compare child fields with parent fields
             angular.forEach(childComplete, function(value, key) {
               if (isBetterChildValue(parentComplete[key], value)) {
-                updates[key] = value;
+                parentUpdates[key] = value;
               }
             });
 
             // merge dailyVisits array
-            updates.dailyVisits = mergeDailyVisits(parentComplete.dailyVisits, childComplete.dailyVisits);
+            parentUpdates.dailyVisits = mergeDailyVisits(parentComplete.dailyVisits, childComplete.dailyVisits);
 
             // set duplicateOf in child
-            update(childId, { 'duplicateOf' : parentId });
+            update(childId, childUpdates);
+
+            parentDuplicates.push(parseContactDuplicate(childComplete));
 
           })
           .catch(function(error) {
@@ -222,9 +233,11 @@ angular.module('secsApp')
 
         $q.all(childrenPromises).then(function() {
           // update parent data
-          update(parentId, updates)
+          update(parentId, parentUpdates)
             .then(function(){
-              d.resolve('merged') ;
+              parentUpdates.dailyVisits = parseDailyVisits(parentUpdates.dailyVisits);
+              parentUpdates.duplicatesList = parentDuplicates;
+              d.resolve({ parentUpdates: parentUpdates, childUpdates: childUpdates}) ;
             })
             .catch(function(error) {
               d.reject(error);

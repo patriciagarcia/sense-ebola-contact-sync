@@ -1,6 +1,11 @@
 Sense Ebola Contact Sync
 ========================
 
+Version 0.1.7
+-------------
+Allow merging of contacts
+Make 'set inactive' button green for contacts marked for deactivation
+
 Version 0.1.6
 -------------
 Show detailed information about the contact on click
